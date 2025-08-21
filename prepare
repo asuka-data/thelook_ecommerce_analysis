@@ -32,3 +32,36 @@ SELECT
 FROM bigquery-public-data.thelook_ecommerce.order_items
 GROUP BY order_id, product_id
 ORDER BY item_count DESC;
+
+-- Calculte top 5 products by year and month
+WITH 
+ total_sales_per_product AS(    --- Create CTE for total sales per product by year and month
+  SELECT
+  product_id,
+  EXTRACT(YEAR FROM created_at) AS created_year,
+  EXTRACT(MONTH FROM created_at) AS created_month,
+  SUM(sale_price) AS total_sales
+ FROM bigquery-public-data.thelook_ecommerce.order_items
+ GROUP BY product_id, created_year, created_month
+ ORDER BY created_year, created_month, total_sales DESC)
+,
+ranked AS(                    --- Create CTE for calculateing total sales rank in month
+  SELECT
+    product_id,
+    created_year,
+    created_month,
+    total_sales,
+    RANK()OVER(
+      PARTITION BY created_year, created_month
+      ORDER BY total_sales DESC) AS rank_in_month
+  FROM total_sales_per_product
+  )
+SELECT
+  product_id,
+  created_year,
+  created_month,
+  total_sales
+FROM ranked
+WHERE rank_in_month <= 5    --- Limit 5 for each product in month and year
+ORDER BY created_year, created_month, rank_in_month;
+
