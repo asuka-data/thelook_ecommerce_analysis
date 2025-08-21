@@ -1,0 +1,20 @@
+--- Explore details
+--- Labeled customer type *repeat_customer* and *new customer*
+
+WITH customer_type_table AS(
+  SELECT 
+  user_id,
+  CASE 
+    WHEN COUNT(user_id) >1 THEN 'repeat_customer'
+    WHEN COUNT(user_id) =1 THEN 'new_customer'
+    ELSE NULL 
+    END AS customer_type
+  FROM bigquery-public-data.thelook_ecommerce.order_items
+  GROUP BY user_id
+)
+SELECT
+  customer_type,
+  COUNT(customer_type)
+FROM customer_type_table
+GROUP BY customer_type;
+
