@@ -18,3 +18,42 @@ SELECT
 FROM customer_type_table
 GROUP BY customer_type;
 
+-- 1. categorize customer into *repeat_customer* and *new_customer*
+WITH customer_type_table AS(
+  SELECT 
+  user_id,
+  CASE 
+    WHEN COUNT(user_id) >1 THEN 'repeat_customer'
+    WHEN COUNT(user_id) =1 THEN 'new_customer'
+    ELSE NULL 
+    END AS customer_type
+  FROM bigquery-public-data.thelook_ecommerce.order_items
+  GROUP BY user_id
+),
+-- 2. Calculate total sales by each user
+user_sales AS(
+  SELECT
+    user_id,
+    SUM(sale_price) AS total_sales,
+    COUNT(*) AS total_items
+  FROM bigquery-public-data.thelook_ecommerce.order_items
+  GROUP BY user_id
+)
+-- 3. Join 2 tables and calculate total sales by 'customer_type' 
+SELECT
+  customer_type,
+  COUNT(customer_type) AS number_of_customer,
+  ROUND(SUM(total_sales),2) AS total_sales,
+  ROUND(AVG(total_sales),2) AS avg_sales 
+FROM user_sales
+JOIN customer_type_table
+ON customer_type_table.user_id = user_sales.user_id
+GROUP BY customer_type;
+
+| customer type | number of customer | total sales | avg sales |
+| --- | --- | --- | --- |
+| repeat_sustomer | 44717 | 8697082.21 | 193.19 |
+| new_customer | 35071 | 2081273.61 | 59.34 |
+
+
+
