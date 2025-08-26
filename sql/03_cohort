@@ -91,5 +91,40 @@ ORDER BY customer_type, total_amount DESC;
 ** Short Summary ** 
 -- 2 products are ranked in top 5 for both *customer_type*
 -- Next action is to find the products name
+-- Created view for the further analysis (See in the View file)
+
+WITH top5 AS 
+(
+  SELECT 
+  *
+  FROM `famous-cache-463121-g6.ecomm_data.vw_per_type` 
+  QUALIFY RANK() OVER (PARTITION BY customer_type ORDER BY total_amount DESC) <= 5
+),
+
+common_id AS
+(
+  SELECT
+    product_id
+  FROM top5
+  GROUP BY product_id
+  HAVING COUNT(DISTINCT customer_type) = 2  -- Common id for both custtomer type
+)
+-- Find products name by using products table 
+SELECT
+  id AS product_id,
+  name AS product_name
+FROM bigquery-public-data.thelook_ecommerce.products
+JOIN common_id
+ON id = product_id
+
+| product_id | product_name |
+| --- | --- |
+| 17094 | The North Face Apex Bionic Soft Shell Jacket - Men's |
+| 22927 | AIR JORDAN DOMINATE SHORTS MENS 465071-100 |
+
+** Short Summary ** 
+-- These 2 items are common for both customer type
+-- Both items are in men's clothing category
+
 
 
