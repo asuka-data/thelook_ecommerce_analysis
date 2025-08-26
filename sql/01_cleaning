@@ -1,4 +1,4 @@
---- Check structures of data table
+--- Data cleaning for **order_items**
 
 -- 1) Count products and rows for each order
 SELECT
@@ -37,5 +37,11 @@ FROM bigquery-public-data.thelook_ecommerce.order_items
 GROUP BY order_id, product_id
 ORDER BY item_count DESC;
 
+-- 4) Check NULL or invalid data 
+SELECT
+ *
+FROM bigquery-public-data.thelook_ecommerce.order_items
+WHERE sale_price IS NULL OR sale_price < 0
+LIMIT 200;
 
 
