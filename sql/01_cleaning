@@ -44,4 +44,21 @@ FROM bigquery-public-data.thelook_ecommerce.order_items
 WHERE sale_price IS NULL OR sale_price < 0
 LIMIT 200;
 
+-- Data cleanig for **orders**
 
+-- 1) Check duplicate of *order_id*
+SELECT 
+ order_id,
+ COUNT(order_id) AS count
+FROM `bigquery-public-data.thelook_ecommerce.orders` 
+GROUP BY order_id
+HAVING count > 1;
+
+-- 2) Calculate number of orders by each user
+SELECT
+  user_id,
+  COUNT(*) AS order_count
+FROM  bigquery-public-data.thelook_ecommerce.orders
+GROUP BY user_id
+ORDER BY order_count DESC
+LIMIT 200;
