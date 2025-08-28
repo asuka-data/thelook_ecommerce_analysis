@@ -48,10 +48,11 @@ Big Query Public data - [thelook_ecommerce](bigquery-public-data.thelook_ecommer
 
 ##  Key Insights
 - *repeat customer* spend much money than *one_time customer*.
-- **Weekend** is the peak of sales.
-- 
+- Weekend is the peak of sales.
+- There is a high-selling item common to both customer type
+  
 ## Suggestions
-- **
+- **Repeat coupon** : To convert *one_time* into *repeat*, deliver repeat coupons 
 
 
 ##  Dashboard
