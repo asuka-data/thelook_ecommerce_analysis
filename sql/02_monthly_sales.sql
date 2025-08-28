@@ -6,8 +6,18 @@ SELECT
 FROM bigquery-public-data.thelook_ecommerce.orders
 GROUP BY year, month 
 ORDER BY year, month
+ 
+-- 2) Calculate total sales and average by year, month
+ SELECT
+ ROUND(SUM(sale_price),2) AS total_sales,
+ ROUND(AVG(sale_price),2) AS avd_sales,
+ EXTRACT(YEAR FROM created_at) AS year,
+ EXTRACT(MONTH FROM created_at) AS month
+FROM bigquery-public-data.thelook_ecommerce.order_items
+GROUP BY year, month 
+ORDER BY year, month;
 
--- 2) Calculate the number of orders by weekday
+-- 3) Calculate the number of orders by weekday
 SELECT 
   COUNT(order_id) AS order_count,
   EXTRACT(DAYOFWEEK FROM created_at) AS day_of_week -- 1= Sunday, 7= Saturday
@@ -15,7 +25,7 @@ FROM bigquery-public-data.thelook_ecommerce.orders
 GROUP BY day_of_week
 ORDER BY day_of_week;
 
--- 3) Calculate growth rate by month
+-- 4) Calculate growth rate by month
 WITH monthly_orders AS
 (
   SELECT 
