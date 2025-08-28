@@ -43,10 +43,11 @@ ORDER BY year;
 | 20753       | 1817921.15  | 60.3      | 2023 |
 | 33014       | 2859942.85  | 59.65     | 2024 |
 | 43039       | 3740016.71  | 59.95     | 2025 |
-
+```
 #### Short summary
 -- The number of orders and total sales are growing
 -- The average sales are stable but still room for improving
+
 
 ### Customer segmentation and anlysis
 - One_time: Order just one time
@@ -86,6 +87,7 @@ GROUP BY customer_type;
 |---------------|---------------------|--------------|------------|
 | one_time      | 49829               | 4306721.61   | 86.43      |
 | repeat        | 30025               | 6549910.56   | 218.15     |
+```
 
 #### Short summary
 - Repeat customer spend much money than one_time customer
@@ -93,6 +95,8 @@ GROUP BY customer_type;
 
 ### Top common selling products for both customer type
 
+** SQL used**
+```sql
 -- Find the commmon products for both customer_type
 WITH top10 AS 
 (
@@ -120,6 +124,7 @@ ON id = product_id
 | product_id | product_name                      |
 |------------|-----------------------------------|
 | 24042      | Canada Goose Men's Langford Parka |
+```
 
 #### Short Summary
 - For marketing point, there should be needed how to deal with this item
