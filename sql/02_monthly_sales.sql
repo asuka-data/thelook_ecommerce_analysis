@@ -80,9 +80,10 @@ FROM ranked
 WHERE rank_in_month <= 5    --- Limit 5 for each product in month and year
 ORDER BY created_year, created_month, rank_in_month;
 
+
 -- 6) Calculate total sales by customer type per month
 -- Customer type Definition: Monthly Perspective
-WITH items AS
+WITH items AS  -- Create CTE for fastest 
 (
   SELECT
    user_id,
@@ -97,14 +98,25 @@ first_m AS
     MIN(items.order_month) AS first_order    
   FROM items
   GROUP BY user_id
+),
+monthly_sales AS
+(
+ SELECT
+   IF(items.order_month = first_m.first_order, 'one_time','repeat') AS customer_type,
+   EXTRACT(YEAR FROM order_month) AS year,
+   EXTRACT(MONTH FROM order_month) AS month,
+   ROUND(SUM(sale_price),2) AS total_sales
+ FROM items
+ JOIN first_m
+ ON items.user_id = first_m.user_id
+ GROUP BY customer_type, year, month
 )
 SELECT
-  IF(items.order_month = first_m.first_order, 'one_time','repeat') AS customer_type,
-  EXTRACT(YEAR FROM order_month) AS year,
-  EXTRACT(MONTH FROM order_month) AS month,
-  SUM(sale_price) AS total_sales
-FROM items
-JOIN first_m
-ON items.user_id = first_m.user_id
-GROUP BY customer_type, year, month
+  customer_type,
+  year,
+  month,
+  total_sales,
+  LAG(total_sales)OVER(ORDER BY year,month) AS pre_month,
+  ROUND(SAFE_DIVIDE(total_sales - LAG(total_sales)OVER(ORDER BY year,month),LAG(total_sales)OVER(ORDER BY year,month)),2) AS growth_rate
+FROM monthly_sales
 ORDER BY year, month;
