@@ -50,10 +50,8 @@ ORDER BY year;
 
 
 ### Customer segmentation and anlysis
-- One_time: Order just one time
-- Repeat: Order more than 2 times (Life_time based)
 
-** SQL used**
+**Overall Perspective**
 ```sql
 -- Calculate *total_orders* and *total_amount* by user
 WITH user_details AS(
@@ -95,7 +93,7 @@ GROUP BY customer_type;
 
 ### Top common selling products for both customer type
 
-** SQL used**
+**Overall Perspective**
 ```sql
 -- Find the commmon products for both customer_type
 WITH top10 AS 
