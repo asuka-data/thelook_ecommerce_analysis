@@ -66,10 +66,9 @@ Big Query Public data - [thelook_ecommerce](bigquery-public-data.thelook_ecommer
 ```
 thelook_ecommerce_analysis/
 ├── sql/
-| ├── 01_explore_tripdata.sql
-│ ├── 02_create_unified_table.sql
-│ ├── 03_clean_data.sql
-│ ├── 04_detailed_explore_data.sql
+│ ├── 01_cleaning.sql
+│ ├── 02_monthly_sales.sql
+│ ├── 03_cohort.sql
 ├── results/
 │ └── exploration_summary.md
 ├── img/
