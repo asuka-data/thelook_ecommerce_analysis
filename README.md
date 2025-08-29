@@ -31,9 +31,13 @@ Big Query Public data - [thelook_ecommerce](bigquery-public-data.thelook_ecommer
    - Check negative sales values (return or cancelled)
 
 3. **Definition for customer type**
-   - *one_time* : total order = 1
-   - *repeat* : total order > 1
-   - total order is calculated all entire period
+customer types were defined from two perspectives:
+   1) **Monthly Perspective**
+      - *New*: Customers making thir first order in an given month.
+      - *Repeat*: Customers placing two or more orders with in the same month.
+   2) **Overall Perspective**
+      - *One_time*: Customers who placed only one order duaring the entire period.
+      - *Repeat*: Customers who placed two or more orders during entire period.
 
 3. **Exploration & Analysis**  
    - Monthly sales(Including MOM), Growth rate of sales total and order numbers
