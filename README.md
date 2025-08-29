@@ -52,11 +52,13 @@ Big Query Public data - [thelook_ecommerce](bigquery-public-data.thelook_ecommer
 - There is a high-selling item common to both customer type
   
 ## Suggestions
-- **Repeat coupon** : To convert *one_time* into *repeat*, deliver repeat coupons 
-
+- **Repeat coupon** : Deliver repeat coupons after first purchase to convert *one_time* into *repeat*,
+- **Weekend Advertisement** : Run targeting Ads on weekend
+- **Key Products** : Use top selling products for the ad image
+- **Stock Monitoring** : Decrease sales opotunity loss by monitoring high-selling product stock
 
 ##  Dashboard
-![Cyclistic Dashboard](img/img_dashboard.png)
+![thelook_ecommerce Dashboard](img/dashboard.png)
 
 --- 
 
