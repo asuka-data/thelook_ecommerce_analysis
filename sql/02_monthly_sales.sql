@@ -48,7 +48,7 @@ ORDER BY year_month;
 -- The number of orders are growing 
 -- Weekend is popular for customers
 
--- Calculte top 5 products by year and month
+-- 5) Calculte top 5 products by year and month
 WITH 
  total_sales_per_product AS(    --- Create CTE for total sales per product by year and month
   SELECT
@@ -79,3 +79,32 @@ SELECT
 FROM ranked
 WHERE rank_in_month <= 5    --- Limit 5 for each product in month and year
 ORDER BY created_year, created_month, rank_in_month;
+
+-- 6) Calculate total sales by customer type per month
+-- Customer type Definition: Monthly Perspective
+WITH items AS
+(
+  SELECT
+   user_id,
+   sale_price,
+   DATE_TRUNC(created_at, MONTH) AS order_month
+FROM `bigquery-public-data.thelook_ecommerce.order_items` 
+),
+first_m AS
+(
+  SELECT
+    user_id,
+    MIN(items.order_month) AS first_order    
+  FROM items
+  GROUP BY user_id
+)
+SELECT
+  IF(items.order_month = first_m.first_order, 'one_time','repeat') AS customer_type,
+  EXTRACT(YEAR FROM order_month) AS year,
+  EXTRACT(MONTH FROM order_month) AS month,
+  SUM(sale_price) AS total_sales
+FROM items
+JOIN first_m
+ON items.user_id = first_m.user_id
+GROUP BY customer_type, year, month
+ORDER BY year, month;
