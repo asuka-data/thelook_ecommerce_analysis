@@ -127,4 +127,51 @@ ON id = product_id
 -- Both items are in men's clothing category
 
 
+WITH
+order_m AS
+(
+  SELECT DISTINCT 
+    user_id,
+    DATE_TRUNC(DATE(created_at), MONTH) AS order_month
+  FROM bigquery-public-data.thelook_ecommerce.orders
+),
+cohort AS(
+  SELECT
+    user_id,
+    MIN(order_month) AS cohort_month
+  FROM order_m
+  GROUP BY user_id
+),
+cohort_size AS
+(
+  SELECT  
+   cohort_month,
+   COUNT(*) AS cohort_size
+  FROM cohort
+  GROUP BY cohort_month
+),
+
+cohort_activity AS
+(
+  SELECT
+    cohort_month,
+    DATE_DIFF(order_month, cohort_month, MONTH) AS gap,
+    COUNT(*) AS active_user
+  FROM cohort
+  JOIN order_m
+  ON cohort.user_id = order_m.user_id
+  GROUP BY cohort_month, gap
+)
+
+SELECT
+ cohort_activity.cohort_month,
+ gap,
+ active_user,
+ cohort_size.cohort_size,
+ ROUND(SAFE_DIVIDE(cohort_activity.active_user,cohort_size.cohort_size),4) AS retention_rate
+ FROM cohort_activity
+ JOIN cohort_size
+ ON cohort_size.cohort_month = cohort_activity.cohort_month
+ORDER BY cohort_month, gap
+
 
